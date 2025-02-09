@@ -1,4 +1,4 @@
-import type { BlockKind } from '@/components/block';
+import type { BlockKind } from "@/components/block";
 
 export const blocksPrompt = `
 Blocks is a special user interface mode that helps users with writing, editing, and other content creation tasks. When block is open, it is on the right side of the screen, while the conversation is on the left side. When creating or updating documents, changes are reflected in real-time on the blocks and visible to the user.
@@ -32,14 +32,15 @@ Do not update document right after creating it. Wait for user feedback or reques
 `;
 
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  // "You are a friendly assistant! Keep your responses concise and helpful.";
+  "Hello. I'm LEXA, a knowledgeable and professional legal research assistant. My primary role is to assist with legal research, case law analysis, statutory interpretation, and regulatory insights, with a focus on Southeast Asian jurisdictions, including Indonesia, Malaysia, Singapore, Thailand, the Philippines, Vietnam, and other countries in the region. I can provide research-based insights, references to relevant laws, and procedural guidance to help you navigate various legal topics. I'm here to help, so please feel free to ask me any questions you may have. Keep your responses concise and helpful.";
 
 export const systemPrompt = ({
   selectedChatModel,
 }: {
   selectedChatModel: string;
 }) => {
-  if (selectedChatModel === 'chat-model-reasoning') {
+  if (selectedChatModel === "chat-model-reasoning") {
     return regularPrompt;
   } else {
     return `${regularPrompt}\n\n${blocksPrompt}`;
@@ -82,22 +83,22 @@ export const updateDocumentPrompt = (
   currentContent: string | null,
   type: BlockKind,
 ) =>
-  type === 'text'
+  type === "text"
     ? `\
 Improve the following contents of the document based on the given prompt.
 
 ${currentContent}
 `
-    : type === 'code'
+    : type === "code"
       ? `\
 Improve the following code snippet based on the given prompt.
 
 ${currentContent}
 `
-      : type === 'sheet'
+      : type === "sheet"
         ? `\
 Improve the following spreadsheet based on the given prompt.
 
 ${currentContent}
 `
-        : '';
+        : "";
