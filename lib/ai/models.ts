@@ -10,22 +10,22 @@ export const DEFAULT_CHAT_MODEL: string = "chat-model-small";
 
 export const myProvider = customProvider({
   languageModels: {
-    "chat-model-small": groq("llama-3.3-70b-versatile"),
+    "title-model": groq("llama-3.1-8b-instant"),
+    "block-model": groq("mixtral-8x7b-32768"),
+    "chat-model-small": groq("gemma2-9b-it"),
     "chat-model-large": groq("llama-3.3-70b-versatile"),
     "chat-model-reasoning": wrapLanguageModel({
       model: groq("deepseek-r1-distill-llama-70b"),
       middleware: extractReasoningMiddleware({ tagName: "think" }),
     }),
-    "block-model": groq("llama-3.3-70b-specdec"),
-    "title-model": groq("llama-3.2-1b-preview"),
+    // 'title-model': openai('gpt-4-turbo'),
+    // 'block-model': openai('gpt-4o-mini'),
     // 'chat-model-small': openai('gpt-4o-mini'),
     // 'chat-model-large': openai('gpt-4o'),
     // 'chat-model-reasoning': wrapLanguageModel({
     //   model: fireworks('accounts/fireworks/models/deepseek-r1'),
     //   middleware: extractReasoningMiddleware({ tagName: 'think' }),
     // }),
-    // 'block-model': openai('gpt-4o-mini'),
-    // 'title-model': openai('gpt-4-turbo'),
   },
   imageModels: {
     // "small-model": openai.image("dall-e-2"),
@@ -43,16 +43,16 @@ export const chatModels: Array<ChatModel> = [
   {
     id: "chat-model-small",
     name: "LEXA Core",
-    description: "Small and efficient model for fast, lightweight tasks",
+    description: "Basic model for simple tasks",
   },
   {
     id: "chat-model-large",
     name: "LEXA Advanced",
-    description: "More advanced model for complex, multi-step tasks",
+    description: "A more advanced model for complex tasks",
   },
   {
     id: "chat-model-reasoning",
     name: "LEXA Thinker",
-    description: "A model that thinks and reasons better",
+    description: "Model that can reason and think better",
   },
 ];

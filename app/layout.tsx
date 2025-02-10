@@ -1,18 +1,60 @@
+import { ThemeProvider } from "@/components/theme-provider";
 import type { Metadata } from "next";
 import { Toaster } from "sonner";
-
-import { ThemeProvider } from "@/components/theme-provider";
-
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://chat.vercel.ai"),
-  title: "Next.js Chatbot Template",
-  description: "Next.js chatbot template using the AI SDK.",
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? ""),
+  title: "LEXA",
+  description:
+    "Empowering Legal Professional throug Cutting-edge AI Solutions.",
+  generator: "Next.js",
+  applicationName: "LEXA",
+  referrer: "strict-origin-when-cross-origin",
+  creator: "Lazuardy",
+  publisher: "Lazuardy",
+  manifest: `${process.env.NEXT_PUBLIC_APP_URL}/manifest.json`,
+  category:
+    "legal tech, artificial intelligence, law, technology, innovation, legal solutions, saas, legal platform, business, generative ai",
+  keywords: [
+    "lexa",
+    "law",
+    "legal",
+    "research",
+    "legal tech",
+    "ai legal assistant",
+    "law and regulation",
+    "legal research",
+    "case analysis",
+    "contract review",
+    "artificial intelligence",
+    "voice-enabled assistant",
+    "indonesian law",
+    "legal solutions",
+    "legal platform",
+    "law portal",
+    "legal innovation",
+    "generative ai",
+    "saas",
+  ],
+  authors: [{ name: "Lazuardy", url: process.env.NEXT_PUBLIC_APP_URL }],
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  alternates: {
+    canonical: "/",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  maximumScale: 1, // disable auto-zoom on mobile safari
+  themeColor: [{ color: "#171717" }],
 };
 
 const LIGHT_THEME_COLOR = "hsl(0 0% 100%)";
@@ -41,14 +83,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="en"
-      // `next-themes` injects an extra classname to the body element to avoid
-      // visual flicker before hydration. Hence the `suppressHydrationWarning`
-      // prop is necessary to avoid the React hydration mismatch warning.
-      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <head>
         <script
           dangerouslySetInnerHTML={{
@@ -57,12 +92,7 @@ export default async function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          // defaultTheme="system"
-          enableSystem
-          // disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="light">
           <Toaster position="top-center" />
           {children}
         </ThemeProvider>

@@ -1,28 +1,25 @@
-'use client';
+"use client";
 
-import type { ChatRequestOptions, Message } from 'ai';
-import cx from 'classnames';
-import { AnimatePresence, motion } from 'framer-motion';
-import { memo, useState } from 'react';
-
-import type { Vote } from '@/lib/db/schema';
-
-import { DocumentToolCall, DocumentToolResult } from './document';
-import {
-  PencilEditIcon,
-  SparklesIcon,
-} from './icons';
-import { Markdown } from './markdown';
-import { MessageActions } from './message-actions';
-import { PreviewAttachment } from './preview-attachment';
-import { Weather } from './weather';
-import equal from 'fast-deep-equal';
-import { cn } from '@/lib/utils';
-import { Button } from './ui/button';
-import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip';
-import { MessageEditor } from './message-editor';
-import { DocumentPreview } from './document-preview';
-import { MessageReasoning } from './message-reasoning';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import type { Vote } from "@/lib/db/schema";
+import { cn } from "@/lib/utils";
+import type { ChatRequestOptions, Message } from "ai";
+import cx from "classnames";
+import equal from "fast-deep-equal";
+import { AnimatePresence, motion } from "framer-motion";
+import { memo, useState } from "react";
+import { DocumentToolCall, DocumentToolResult } from "./document";
+import { DocumentPreview } from "./document-preview";
+import { PencilEditIcon } from "./icons";
+import { Markdown } from "./markdown";
+import { MessageActions } from "./message-actions";
+import { MessageEditor } from "./message-editor";
+import { MessageReasoning } from "./message-reasoning";
+import { PreviewAttachment } from "./preview-attachment";
+import { Button } from "./ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
+import { Weather } from "./weather";
+import { WebSearchResult, WebSearchCall } from "./web-search";
 
 const PurePreviewMessage = ({
   chatId,
@@ -45,7 +42,7 @@ const PurePreviewMessage = ({
   ) => Promise<string | null | undefined>;
   isReadonly: boolean;
 }) => {
-  const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const [mode, setMode] = useState<"view" | "edit">("view");
 
   return (
     <AnimatePresence>
@@ -57,17 +54,20 @@ const PurePreviewMessage = ({
       >
         <div
           className={cn(
-            'flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl',
+            "flex gap-4 w-full group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl",
             {
-              'w-full': mode === 'edit',
-              'group-data-[role=user]/message:w-fit': mode !== 'edit',
+              "w-full": mode === "edit",
+              "group-data-[role=user]/message:w-fit": mode !== "edit",
             },
           )}
         >
-          {message.role === 'assistant' && (
+          {message.role === "assistant" && (
             <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border bg-background">
               <div className="translate-y-px">
-                <SparklesIcon size={14} />
+                <Avatar className="size-8">
+                  <AvatarImage src="/images/avatars/lexa.png" alt="LEXA" />
+                  <AvatarFallback>L</AvatarFallback>
+                </Avatar>
               </div>
             </div>
           )}
@@ -91,16 +91,16 @@ const PurePreviewMessage = ({
               />
             )}
 
-            {(message.content || message.reasoning) && mode === 'view' && (
+            {(message.content || message.reasoning) && mode === "view" && (
               <div className="flex flex-row gap-2 items-start">
-                {message.role === 'user' && !isReadonly && (
+                {message.role === "user" && !isReadonly && (
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Button
                         variant="ghost"
                         className="px-2 h-fit rounded-full text-muted-foreground opacity-0 group-hover/message:opacity-100"
                         onClick={() => {
-                          setMode('edit');
+                          setMode("edit");
                         }}
                       >
                         <PencilEditIcon />
@@ -111,9 +111,9 @@ const PurePreviewMessage = ({
                 )}
 
                 <div
-                  className={cn('flex flex-col gap-4', {
-                    'bg-primary text-primary-foreground px-3 py-2 rounded-xl':
-                      message.role === 'user',
+                  className={cn("flex flex-col gap-4", {
+                    "bg-primary text-primary-foreground px-3 py-2 rounded-xl":
+                      message.role === "user",
                   })}
                 >
                   <Markdown>{message.content as string}</Markdown>
@@ -121,7 +121,7 @@ const PurePreviewMessage = ({
               </div>
             )}
 
-            {message.content && mode === 'edit' && (
+            {message.content && mode === "edit" && (
               <div className="flex flex-row gap-2 items-start">
                 <div className="size-8" />
 
@@ -140,25 +140,27 @@ const PurePreviewMessage = ({
                 {message.toolInvocations.map((toolInvocation) => {
                   const { toolName, toolCallId, state, args } = toolInvocation;
 
-                  if (state === 'result') {
+                  if (state === "result") {
                     const { result } = toolInvocation;
 
                     return (
                       <div key={toolCallId}>
-                        {toolName === 'getWeather' ? (
+                        {toolName === "webSearch" ? (
+                          <WebSearchResult result={result} />
+                        ) : toolName === "getWeather" ? (
                           <Weather weatherAtLocation={result} />
-                        ) : toolName === 'createDocument' ? (
+                        ) : toolName === "createDocument" ? (
                           <DocumentPreview
                             isReadonly={isReadonly}
                             result={result}
                           />
-                        ) : toolName === 'updateDocument' ? (
+                        ) : toolName === "updateDocument" ? (
                           <DocumentToolResult
                             type="update"
                             result={result}
                             isReadonly={isReadonly}
                           />
-                        ) : toolName === 'requestSuggestions' ? (
+                        ) : toolName === "requestSuggestions" ? (
                           <DocumentToolResult
                             type="request-suggestions"
                             result={result}
@@ -170,24 +172,27 @@ const PurePreviewMessage = ({
                       </div>
                     );
                   }
+
                   return (
                     <div
                       key={toolCallId}
                       className={cx({
-                        skeleton: ['getWeather'].includes(toolName),
+                        skeleton: ["getWeather"].includes(toolName),
                       })}
                     >
-                      {toolName === 'getWeather' ? (
+                      {toolName === "webSearch" ? (
+                        <WebSearchCall />
+                      ) : toolName === "getWeather" ? (
                         <Weather />
-                      ) : toolName === 'createDocument' ? (
+                      ) : toolName === "createDocument" ? (
                         <DocumentPreview isReadonly={isReadonly} args={args} />
-                      ) : toolName === 'updateDocument' ? (
+                      ) : toolName === "updateDocument" ? (
                         <DocumentToolCall
                           type="update"
                           args={args}
                           isReadonly={isReadonly}
                         />
-                      ) : toolName === 'requestSuggestions' ? (
+                      ) : toolName === "requestSuggestions" ? (
                         <DocumentToolCall
                           type="request-suggestions"
                           args={args}
@@ -237,29 +242,32 @@ export const PreviewMessage = memo(
 );
 
 export const ThinkingMessage = () => {
-  const role = 'assistant';
+  const role = "assistant";
 
   return (
     <motion.div
-      className="w-full mx-auto max-w-3xl px-4 group/message "
+      className="w-full mx-auto max-w-3xl px-4 group/message"
       initial={{ y: 5, opacity: 0 }}
       animate={{ y: 0, opacity: 1, transition: { delay: 1 } }}
       data-role={role}
     >
       <div
         className={cx(
-          'flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl',
+          "flex gap-4 group-data-[role=user]/message:px-3 w-full group-data-[role=user]/message:w-fit group-data-[role=user]/message:ml-auto group-data-[role=user]/message:max-w-2xl group-data-[role=user]/message:py-2 rounded-xl",
           {
-            'group-data-[role=user]/message:bg-muted': true,
+            "group-data-[role=user]/message:bg-muted": true,
           },
         )}
       >
         <div className="size-8 flex items-center rounded-full justify-center ring-1 shrink-0 ring-border">
-          <SparklesIcon size={14} />
+          <Avatar className="size-8">
+            <AvatarImage src="/images/avatars/lexa.png" alt="LEXA" />
+            <AvatarFallback>L</AvatarFallback>
+          </Avatar>
         </div>
 
         <div className="flex flex-col gap-2 w-full">
-          <div className="flex flex-col gap-4 text-muted-foreground">
+          <div className="flex flex-col gap-4 text-muted-foreground animate-pulse pt-1">
             Thinking...
           </div>
         </div>

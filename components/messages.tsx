@@ -1,10 +1,10 @@
-import type { ChatRequestOptions, Message } from 'ai';
-import { PreviewMessage, ThinkingMessage } from './message';
-import { useScrollToBottom } from './use-scroll-to-bottom';
-import { Overview } from './overview';
-import { memo } from 'react';
-import type { Vote } from '@/lib/db/schema';
-import equal from 'fast-deep-equal';
+import type { ChatRequestOptions, Message } from "ai";
+import { PreviewMessage, ThinkingMessage } from "./message";
+import { useScrollToBottom } from "./use-scroll-to-bottom";
+import { Overview } from "./overview";
+import { memo } from "react";
+import type { Vote } from "@/lib/db/schema";
+import equal from "fast-deep-equal";
 
 interface MessagesProps {
   chatId: string;
@@ -59,7 +59,7 @@ function PureMessages({
 
       {isLoading &&
         messages.length > 0 &&
-        messages[messages.length - 1].role === 'user' && <ThinkingMessage />}
+        isUserMessage(messages[messages.length - 1]) && <ThinkingMessage />}
 
       <div
         ref={messagesEndRef}
@@ -80,3 +80,17 @@ export const Messages = memo(PureMessages, (prevProps, nextProps) => {
 
   return true;
 });
+
+function isUserMessage({ role }: Message) {
+  return role === "user";
+}
+
+function isWebSearchMessage({ role, parts }: Message) {
+  return (
+    role === "assistant" &&
+    parts &&
+    parts.length >= 1 &&
+    parts[0].type === "tool-invocation" &&
+    parts[0].toolInvocation.toolName === "webSearch"
+  );
+}

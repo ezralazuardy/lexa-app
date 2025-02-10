@@ -1,12 +1,11 @@
-import { codeDocumentHandler } from '@/blocks/code/server';
-import { imageDocumentHandler } from '@/blocks/image/server';
-import { sheetDocumentHandler } from '@/blocks/sheet/server';
-import { textDocumentHandler } from '@/blocks/text/server';
-import type { BlockKind } from '@/components/block';
-import type { DataStreamWriter } from 'ai';
-import type { Document } from '../db/schema';
-import { saveDocument } from '../db/queries';
-import type { Session } from 'next-auth';
+
+import { sheetDocumentHandler } from "@/blocks/sheet/server";
+import { textDocumentHandler } from "@/blocks/text/server";
+import type { BlockKind } from "@/components/block";
+import type { DataStreamWriter } from "ai";
+import type { Document } from "../db/schema";
+import { saveDocument } from "../db/queries";
+import type { Session } from "next-auth";
 
 export interface SaveDocumentProps {
   id: string;
@@ -91,9 +90,15 @@ export function createDocumentHandler<T extends BlockKind>(config: {
  */
 export const documentHandlersByBlockKind: Array<DocumentHandler> = [
   textDocumentHandler,
-  codeDocumentHandler,
-  imageDocumentHandler,
   sheetDocumentHandler,
+  // codeDocumentHandler,
+  // imageDocumentHandler,
 ];
 
-export const blockKinds = ['text', 'code', 'image', 'sheet'] as const;
+export const blockKinds = [
+  "text",
+  "sheet",
+  "news",
+  // "code",
+  // "image",
+] as const;

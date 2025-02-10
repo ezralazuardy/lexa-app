@@ -1,13 +1,10 @@
-import {
-  type Message,
-  createDataStreamResponse,
-  smoothStream,
-  streamText,
-} from "ai";
-
 import { auth } from "@/app/(auth)/auth";
 import { myProvider } from "@/lib/ai/models";
 import { systemPrompt } from "@/lib/ai/prompts";
+import { createDocument } from "@/lib/ai/tools/create-document";
+import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
+import { updateDocument } from "@/lib/ai/tools/update-document";
+import { webSearch } from "@/lib/ai/tools/web-search";
 import {
   deleteChatById,
   getChatById,
@@ -19,12 +16,13 @@ import {
   getMostRecentUserMessage,
   sanitizeResponseMessages,
 } from "@/lib/utils";
-
+import {
+  type Message,
+  createDataStreamResponse,
+  smoothStream,
+  streamText,
+} from "ai";
 import { generateTitleFromUserMessage } from "../../actions";
-import { createDocument } from "@/lib/ai/tools/create-document";
-import { updateDocument } from "@/lib/ai/tools/update-document";
-import { requestSuggestions } from "@/lib/ai/tools/request-suggestions";
-import { getWeather } from "@/lib/ai/tools/get-weather";
 
 export const maxDuration = 60;
 
@@ -66,19 +64,25 @@ export async function POST(request: Request) {
         system: systemPrompt({ selectedChatModel }),
         messages,
         maxSteps: 5,
+        experimental_telemetry: {
+          isEnabled: true,
+          functionId: "stream-text",
+        },
+        experimental_generateMessageId: generateUUID,
+        experimental_transform: smoothStream({ chunking: "word" }),
         experimental_activeTools:
           selectedChatModel === "chat-model-reasoning"
             ? []
             : [
-                "getWeather",
+                // getWeather,
+                "webSearch",
                 "createDocument",
                 "updateDocument",
                 "requestSuggestions",
               ],
-        experimental_transform: smoothStream({ chunking: "word" }),
-        experimental_generateMessageId: generateUUID,
         tools: {
-          getWeather,
+          // getWeather,
+          webSearch,
           createDocument: createDocument({ session, dataStream }),
           updateDocument: updateDocument({ session, dataStream }),
           requestSuggestions: requestSuggestions({
@@ -109,10 +113,6 @@ export async function POST(request: Request) {
               console.error("Failed to save chat");
             }
           }
-        },
-        experimental_telemetry: {
-          isEnabled: true,
-          functionId: "stream-text",
         },
       });
 
