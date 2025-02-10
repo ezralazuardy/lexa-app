@@ -85,7 +85,7 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
+        {/* <link rel="icon" href="/favicon.ico" sizes="any" />
         <link
           rel="icon"
           href="/icon?<generated>"
@@ -97,14 +97,14 @@ export default async function RootLayout({
           href="/apple-icon?<generated>"
           type="image/<generated>"
           sizes="<generated>"
-        />
+        /> */}
         <script
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className="antialiased bg-main">
         <ThemeProvider attribute="class" defaultTheme="light">
           <Toaster position="top-center" />
           {children}

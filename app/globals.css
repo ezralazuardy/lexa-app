@@ -118,6 +118,10 @@
     }
 }
 
+.bg-main {
+    background-color: #171717;
+}
+
 .skeleton {
     * {
         pointer-events: none !important;
