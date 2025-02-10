@@ -6,7 +6,7 @@
 
 ## lexa-app
 
-This is a repository for the Lexa project. Built using [Next](https://nextjs.org).
+This is a repository for the LEXA project. Built using [Next](https://nextjs.org).
 
 > This project is **NOT** licensed and all rights are reserved. <br/>
 > You are not allowed to use this project for commercial purposes.
