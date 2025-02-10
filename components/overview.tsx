@@ -12,14 +12,15 @@ export const Overview = () => {
       transition={{ delay: 0.5 }}
     >
       <div className="rounded-xl p-6 flex flex-col gap-8 leading-relaxed text-sm text-center max-w-xl">
-        <div className="flex flex-row justify-center gap-4 items-center">
+        <div className="flex flex-row justify-center gap-4 items-center mt-6 md:mt-0">
           <Logo className="text-4xl" />
         </div>
-        <p>
+        <p className="leading-relaxed text-xs md:text-sm">
           Ask me anything! I&apos;m here to help you as a personal legal
           assistant.
-          <br />
-          Tips: <span className="font-semibold">Core</span> or{" "}
+          <br className="hidden md:block" />
+          <span className="ml-1 md:ml-0">Tips:</span>{" "}
+          <span className="font-semibold">Core</span> or{" "}
           <span className="font-semibold">Advanced</span> model can generate
           documents directly in chat, while{" "}
           <span className="font-semibold">Thinker</span> model can research a
