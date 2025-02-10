@@ -220,7 +220,7 @@ export async function getDocumentsById({ id }: { id: string }) {
 
 export async function getDocumentById({
   id,
-  softFail,
+  softFail = false,
 }: {
   id: string;
   softFail: boolean;
@@ -238,9 +238,8 @@ export async function getDocumentById({
       "getDocumentById: Failed to get document by id from database",
     );
 
-    if (!softFail) {
-      throw error;
-    }
+    if (!softFail) throw error;
+
     return null;
   }
 }
