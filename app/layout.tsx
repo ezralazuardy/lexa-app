@@ -1,6 +1,7 @@
-import { ThemeProvider } from "@/components/theme-provider";
+import ComponentProvider from "@/components/provider/component-provider";
+import ThemeProvider from "@/components/provider/theme-provider";
+import VercelProvider from "@/components/provider/vercel-provider";
 import type { Metadata } from "next";
-import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -85,19 +86,6 @@ export default async function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link
-          rel="icon"
-          href="/icon?<generated>"
-          type="image/<generated>"
-          sizes="<generated>"
-        />
-        <link
-          rel="apple-touch-icon"
-          href="/apple-icon?<generated>"
-          type="image/<generated>"
-          sizes="<generated>"
-        /> */}
         <script
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
@@ -106,9 +94,10 @@ export default async function RootLayout({
       </head>
       <body className="antialiased bg-main">
         <ThemeProvider attribute="class" defaultTheme="light">
-          <Toaster position="top-center" />
           {children}
+          <ComponentProvider />
         </ThemeProvider>
+        <VercelProvider />
       </body>
     </html>
   );

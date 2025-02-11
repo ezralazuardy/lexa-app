@@ -1,3 +1,4 @@
+import type { Message as DBMessage, Document } from "@/lib/db/schema";
 import type {
   CoreAssistantMessage,
   CoreToolMessage,
@@ -7,10 +8,12 @@ import type {
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-import type { Message as DBMessage, Document } from "@/lib/db/schema";
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
+}
+
+export function isProductionMode() {
+  return process.env.NODE_ENV === "production";
 }
 
 interface ApplicationError extends Error {
